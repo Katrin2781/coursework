@@ -1,26 +1,28 @@
 import VK
 import YDisk
-import os
 import json
+import configparser
 
-def read_token(file_name):
-    with open(os.path.join(os.getcwd(), file_name), 'r') as tokenFile:
-        token = tokenFile.readline().strip()
-        id_user = tokenFile.readline().strip()
-    return [token, id_user]
+
+def read_token(access_obj):
+    config = configparser.ConfigParser()
+    config.read('setting.ini')
+    token = config[access_obj]['TOKEN']
+    return token
 
 
 if __name__ == '__main__':
     # копирование фотографий из профиля VK
-    my_VK_profile = VK.VK_user(read_token('token.txt'), 'profile')
+    id_user = input("Введите id VK: ")
+    my_VK_profile = VK.VKUser(read_token('VK'), id_user, 'profile')
     with open('my_photos_VK_prof.json', 'w') as pfile:
         json.dump(my_VK_profile.jsonList, pfile)
-    my_YA = YDisk.Yandex('Photo VK_profile', read_token('token_Y.txt'),5)
-    my_YA.load_Y_disk(my_VK_profile.exp_dict)
+    my_YA = YDisk.Yandex('Photo VK_profile', read_token('Yandex'), 5)
+    my_YA.load_y_disk(my_VK_profile.exp_dict)
 
-    # копирование фотографий со стены VK
-    my_VK_wall = VK.VK_user(read_token('token.txt'), 'wall')
+#    копирование фотографий со стены VK
+    my_VK_wall = VK.VKUser(read_token('VK'), id_user, 'wall')
     with open('my_photos_VK_saved.json', 'w') as wfile:
         json.dump(my_VK_wall.jsonList, wfile)
-    my_YA = YDisk.Yandex('Photo VK_wall', read_token('token_Y.txt'),15)
-    my_YA.load_Y_disk(my_VK_wall.exp_dict)
+    my_YA = YDisk.Yandex('Photo VK_wall', read_token('Yandex'), 15)
+    my_YA.load_y_disk(my_VK_wall.exp_dict)
