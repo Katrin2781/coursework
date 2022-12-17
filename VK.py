@@ -22,15 +22,24 @@ def time_convert(date_unix):
 
 
 class VKUser:
-    def __init__(self, token, id, album_id, version='5.131'):
+    def __init__(self, token, id_user, album_id, version='5.131'):
         """ Метод для получения начальных параметров запроса для VK"""
         self.token = token
-        self.id = id
+        self.user_vk = id_user
         self.version = version
         self.album = album_id
         self.startParams = {'access_token': self.token,
                             'v': self.version}
+        self.id = self._get_id_user()
         self.jsonList, self.exp_dict = self._photo_info()
+
+
+    def _get_id_user(self):
+        """Метод для получения id пользователя"""
+        url = 'http://api.vk.com/method/users.get'
+        params = {'user_ids': self.user_vk}
+        id_vk = requests.get(url, params={**self.startParams, **params}).json()['response'][0]['id']
+        return id_vk
 
     def _get_photos(self):
         """Метод для получения словаря с параметрами фотографий"""

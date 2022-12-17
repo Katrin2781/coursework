@@ -13,7 +13,7 @@ def read_token(access_obj):
 
 if __name__ == '__main__':
     # копирование фотографий из профиля VK
-    id_user = input("Введите id VK: ")
+    id_user = input("Введите идентификатор пользователя VK или короткое имя: ")
     my_VK_profile = VK.VKUser(read_token('VK'), id_user, 'profile')
     with open('my_photos_VK_prof.json', 'w') as pfile:
         json.dump(my_VK_profile.jsonList, pfile)
